@@ -22,9 +22,10 @@ import java.util.Map;
  *
  * @author mschoenauer1
  */
-public class MySqlDb {
+public class MySqlDbStrategy implements DBStrategy {
     private Connection conn;
     
+    @Override
     public void openConnection(String driverClass, String url, String userName, String password) throws Exception {
         
         Class.forName (driverClass);
@@ -32,10 +33,12 @@ public class MySqlDb {
         
     }
     
+    @Override
     public void closeConnection() throws SQLException {
         conn.close();
     }
     
+    @Override
     public List<Map<String,Object>> findAllRecords(String tableName) throws SQLException {
         List<Map<String,Object>> records = new ArrayList<>();
         
@@ -55,6 +58,7 @@ public class MySqlDb {
         return records;
     }
     
+    @Override
     public int deleteRecordByPrimaryKey(Object key, String keyIdentifier, String tableName) throws SQLException {
         
         String sql = "";
@@ -92,6 +96,7 @@ public class MySqlDb {
         return updateCount;
     }
     
+    @Override
     public int insertRecordIntoTable(String tableName, List<String> columnNames, List<Object> values) throws SQLException {
         PreparedStatement pstmt = null;
         String sql = "INSERT INTO " + tableName + "("; //first_name,last_name)" + " VALUES('Billy','Carter')";
@@ -127,8 +132,22 @@ public class MySqlDb {
         return updateCount;
     }
     
+    @Override
+    public int updateRecordByPrimaryKey(String tableName, String columnName, Object newValue, String keyIdentifier, Object key) throws SQLException {
+        PreparedStatement pstmt = null;
+        String sql = "UPDATE " + tableName + " SET " + columnName + " = ?, WHERE " + keyIdentifier + " = ?"; 
+        
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setObject(1, newValue);
+        pstmt.setObject(2, key);
+        
+        int updateCount = pstmt.executeUpdate();
+        
+        return updateCount;
+    }
+    
     public static void main(String[] args) throws Exception {
-        MySqlDb db = new MySqlDb();
+        MySqlDbStrategy db = new MySqlDbStrategy();
         db.openConnection("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/book", "root", "admin");
         
         List<Map<String,Object>> records = db.findAllRecords("author");

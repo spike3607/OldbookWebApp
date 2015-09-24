@@ -5,40 +5,41 @@
  */
 package edu.wctc.mss.bookwebapp.model;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  *
  * @author mschoenauer1
  */
 public class Author {
-    private String firstName;
-    private String lastName;
+    private String authorName;
+    private int authorId;
     private Date dateAdded;
 
     public Author() {
     }
 
-    public Author(String firstName, String lastName, Date dateAdded) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Author(String authorName, int authorId, Date dateAdded) {
+        this.authorName = authorName;
+        this.authorId = authorId;
         this.dateAdded = dateAdded;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getAuthorName() {
+        return authorName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public Date getDateAdded() {
@@ -48,4 +49,40 @@ public class Author {
     public void setDateAdded(Date dateAdded) {
         this.dateAdded = dateAdded;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.authorName);
+        hash = 17 * hash + this.authorId;
+        hash = 17 * hash + Objects.hashCode(this.dateAdded);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Author other = (Author) obj;
+        if (!Objects.equals(this.authorName, other.authorName)) {
+            return false;
+        }
+        if (this.authorId != other.authorId) {
+            return false;
+        }
+        if (!Objects.equals(this.dateAdded, other.dateAdded)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" + "authorName=" + authorName + ", authorId=" + authorId + ", dateAdded=" + dateAdded + '}';
+    }
+    
 }
