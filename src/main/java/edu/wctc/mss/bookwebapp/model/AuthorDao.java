@@ -56,6 +56,23 @@ public class AuthorDao implements AuthorDaoStrategy {
         
     }
     
+    @Override
+    public final void addAuthor(String name, Date date) throws Exception {
+        db.openConnection(driverClass, url, userName, password);
+        
+        ArrayList columns = new ArrayList();
+        columns.add("author_name");
+        columns.add("date_created");
+        
+        ArrayList values = new ArrayList();
+        values.add(name);
+        values.add(date);
+        
+        db.insertRecordIntoTable("author", columns, values);
+        
+        db.closeConnection();
+    }
+    
     // Test harness - not used in production
     public static void main(String[] args) throws Exception {
         AuthorDao dao = new AuthorDao(new MySqlDbStrategy(),"com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/book", "root", "admin");

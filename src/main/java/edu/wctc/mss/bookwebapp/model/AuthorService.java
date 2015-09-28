@@ -1,5 +1,6 @@
 package edu.wctc.mss.bookwebapp.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,6 +21,10 @@ public class AuthorService {
     
     public final List<Author> getAllAuthors() throws Exception {
         return dao.getAllAuthors();
+    }
+    
+    public final void addAuthor(String name, Date dateCreated) throws Exception {
+        dao.addAuthor(name,dateCreated);
     }
     
     // Test harness - not used in production

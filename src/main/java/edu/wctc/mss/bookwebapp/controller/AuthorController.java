@@ -8,6 +8,7 @@ import edu.wctc.mss.bookwebapp.model.AuthorService;
 import edu.wctc.mss.bookwebapp.model.DBStrategy;
 import edu.wctc.mss.bookwebapp.model.MySqlDbStrategy;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -85,8 +86,9 @@ public class AuthorController extends HttpServlet {
                 request.setAttribute("authors", authors);
                 destination = LIST_PAGE;
 
-            } else if (action.equals("ADD_ACTION")) {
-                // coming soon
+            } else if (action.equals(ADD_ACTION)) {
+                // Hard coded for now, for testing purposes
+                authService.addAuthor("Mike Schoenauer", new Date());
             } else if (action.equals("UPDATE_ACTION")) {
                 // coming soon
             } else if (action.equals("DELETE_ACTION")) {

@@ -5,6 +5,7 @@
  */
 package edu.wctc.mss.bookwebapp.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,4 +14,5 @@ import java.util.List;
  */
 public interface AuthorDaoStrategy {
     List<Author> getAllAuthors() throws Exception;
+    void addAuthor(String name, Date dateCreated) throws Exception;
 }
