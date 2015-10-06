@@ -73,6 +73,24 @@ public class AuthorDao implements AuthorDaoStrategy {
         db.closeConnection();
     }
     
+    @Override
+    public final void updateAuthor(Object key, String columnName, Object newObject) throws Exception {
+        db.openConnection(driverClass, url, userName, password);
+        
+        db.updateRecordByPrimaryKey("author", columnName, newObject, "author_id", key);
+        
+        db.closeConnection();
+    }
+    
+    @Override
+    public final void deleteAuthor(Object key) throws Exception {
+        db.openConnection(driverClass, url, userName, password);
+        
+        db.deleteRecordByPrimaryKey(key, "author_id", "author");
+        
+        db.closeConnection();
+    }
+    
     // Test harness - not used in production
     public static void main(String[] args) throws Exception {
         AuthorDao dao = new AuthorDao(new MySqlDbStrategy(),"com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/book", "root", "admin");

@@ -27,6 +27,14 @@ public class AuthorService {
         dao.addAuthor(name,dateCreated);
     }
     
+    public final void updateAuthor(Object key, String columnName, Object newObject) throws Exception {
+        dao.updateAuthor(key, columnName, newObject);
+    }
+    
+    public final void deleteAuthor(Object key) throws Exception {
+        dao.deleteAuthor(key);
+    }
+    
     // Test harness - not used in production
     public static void main(String[] args) throws Exception {
         AuthorService authServ = new AuthorService(

@@ -28,8 +28,6 @@ import javax.sql.DataSource;
 @WebServlet(name = "AuthorController", urlPatterns = {"/AuthorController"})
 public class AuthorController extends HttpServlet {
 
-    // NO MAGIC NUMBERS!
-
     private static final String NO_PARAM_ERR_MSG = "No request parameter identified";
     private static final String LIST_PAGE = "/listAuthors.jsp";
     private static final String LIST_ACTION = "list";
@@ -37,6 +35,11 @@ public class AuthorController extends HttpServlet {
     private static final String UPDATE_ACTION = "update";
     private static final String DELETE_ACTION = "delete";
     private static final String ACTION_PARAM = "action";
+    
+    private String dbStrategyClassName;
+    private String daoClassName;
+    private DBStrategy db;
+    private AuthorDaoStrategy authorDao;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -53,15 +56,27 @@ public class AuthorController extends HttpServlet {
 
         String destination = LIST_PAGE;
         String action = request.getParameter(ACTION_PARAM);
+        
+        String email = this.getServletContext().getInitParameter("email");
+        System.out.println(email);
+        
+        dbStrategyClassName = this.getServletConfig().getInitParameter("dbStrategy");
+        daoClassName = this.getServletConfig().getInitParameter("authorDao");
+        
+//        try {
+//            
+//            Class c = Class.forName(dbStrategyClassName);
+//            db = (DBStrategy)c.newInstance();
+//            
+//            c = Class.forName(daoClassName);
+//            
+//            
+//        } catch (Exception e) {
+//            System.out.println(e.getLocalizedMessage());
+//        }
+        
 
-        /*
-         For now we are hard-coding the strategy objects into this
-         controller. In the future we'll auto inject them from a config
-         file. Also, the DAO opens/closes a connection on each method call,
-         which is not very efficient. In the future we'll learn how to use
-         a connection pool to improve this.
-         */
-        DBStrategy db = new MySqlDbStrategy();
+        db = new MySqlDbStrategy();
         AuthorDaoStrategy authDao
                 = new AuthorDao(db, "com.mysql.jdbc.Driver",
                         "jdbc:mysql://localhost:3306/book", "root", "admin");
@@ -80,6 +95,7 @@ public class AuthorController extends HttpServlet {
              Determine what action to take based on a passed in QueryString
              Parameter
              */
+             
             if (action.equals(LIST_ACTION)) {
                 List<Author> authors = null;
                 authors = authService.getAllAuthors();
@@ -88,11 +104,42 @@ public class AuthorController extends HttpServlet {
 
             } else if (action.equals(ADD_ACTION)) {
                 // Hard coded for now, for testing purposes
-                authService.addAuthor("Mike Schoenauer", new Date());
-            } else if (action.equals("UPDATE_ACTION")) {
-                // coming soon
-            } else if (action.equals("DELETE_ACTION")) {
-                // coming soon
+                // authService.addAuthor("Mike Schoenauer", new Date());
+                
+                String newAuthorName = request.getParameter("newName");
+                String date = request.getParameter("newDate");
+                Date newDate = new Date(date);
+                
+                System.out.println("Adding Author: " + newAuthorName + date);
+                
+                authService.addAuthor(newAuthorName, newDate);
+                
+                destination = "/index.html";
+                
+            } else if (action.equals(UPDATE_ACTION)) {
+                // Hard code for now, for testing purposes
+                //authService.updateAuthor(1,"author_name","Steve Schoenauer");
+                
+                String id = request.getParameter("author_id");
+                int newAuthorID = Integer.parseInt(id);
+                String newAuthorName = request.getParameter("new_name");
+                
+                
+                authService.updateAuthor(newAuthorID, "author_name", newAuthorName);
+                
+                destination = "/index.html";
+                
+            } else if (action.equals(DELETE_ACTION)) {
+                // 
+                //authService.deleteAuthor(1);
+                
+                String id = request.getParameter("author_id");
+                int newAuthorID = Integer.parseInt(id);
+                
+                authService.deleteAuthor(newAuthorID);
+                
+                destination = "/index.html";
+                
             } else {
                 // no param identified in request, must be an error
                 request.setAttribute("errMsg", NO_PARAM_ERR_MSG);

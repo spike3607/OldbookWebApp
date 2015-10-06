@@ -61,24 +61,6 @@ public class MySqlDbStrategy implements DBStrategy {
     @Override
     public int deleteRecordByPrimaryKey(Object key, String keyIdentifier, String tableName) throws SQLException {
         
-        String sql = "";
-        
-        if (key instanceof String) {
-            sql = "DELETE FROM " + tableName + " WHERE " + keyIdentifier + " = '" + key + "'";
-        }
-        else {
-            sql = "DELETE FROM " + tableName + " WHERE " + keyIdentifier + " = " + key.toString();
-        }
-        
-        int updateCount = 0;
-        
-        Statement stmt = conn.createStatement();
-        updateCount = stmt.executeUpdate(sql);
-        
-        return updateCount;
-    }
-    
-    public int deleteRecordByPrimaryKeyPS(Object key, String keyIdentifier, String tableName) throws SQLException {
         PreparedStatement pstmt = null;
         String sql = "DELETE FROM " + tableName + " WHERE " + keyIdentifier + " = ?";
         
@@ -135,7 +117,7 @@ public class MySqlDbStrategy implements DBStrategy {
     @Override
     public int updateRecordByPrimaryKey(String tableName, String columnName, Object newValue, String keyIdentifier, Object key) throws SQLException {
         PreparedStatement pstmt = null;
-        String sql = "UPDATE " + tableName + " SET " + columnName + " = ?, WHERE " + keyIdentifier + " = ?"; 
+        String sql = "UPDATE " + tableName + " SET " + columnName + " = ? WHERE " + keyIdentifier + " = ?"; 
         
         pstmt = conn.prepareStatement(sql);
         pstmt.setObject(1, newValue);
@@ -171,7 +153,7 @@ public class MySqlDbStrategy implements DBStrategy {
             System.out.println(record);
         }
         
-        updateCount = db.deleteRecordByPrimaryKeyPS(5, "author_id", "author");
+        updateCount = db.deleteRecordByPrimaryKey(5, "author_id", "author");
         System.out.println("Deleted " + updateCount + " record(s)");
         
         records = db.findAllRecords("author");

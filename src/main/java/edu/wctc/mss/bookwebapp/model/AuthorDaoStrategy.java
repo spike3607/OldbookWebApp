@@ -15,4 +15,6 @@ import java.util.List;
 public interface AuthorDaoStrategy {
     List<Author> getAllAuthors() throws Exception;
     void addAuthor(String name, Date dateCreated) throws Exception;
+    void updateAuthor(Object key, String columnName, Object newObject) throws Exception;
+    void deleteAuthor(Object key) throws Exception;
 }
